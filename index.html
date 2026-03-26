@@ -1131,25 +1131,24 @@
       </div>
     </div>
 
-    <div class="contact-form fade-up" style="transition-delay:0.1s">
+    <form class="contact-form fade-up" style="transition-delay:0.1s" action="https://formspree.io/f/xnjondle" method="POST">
       <div class="form-field">
         <label>Name</label>
-        <input type="text" placeholder="Your name" />
+        <input type="text" name="name" placeholder="Your name" required />
       </div>
       <div class="form-field">
         <label>Email</label>
-        <input type="email" placeholder="your@email.com" />
+        <input type="email" name="email" placeholder="your@email.com" required />
       </div>
       <div class="form-field">
         <label>Message</label>
-        <textarea placeholder="What's on your mind?"></textarea>
+        <textarea name="message" placeholder="What's on your mind?" required></textarea>
       </div>
-      <button class="btn btn-primary" style="align-self:flex-start; cursor:pointer;"
-        onclick="alert('To enable form submissions: sign up free at formspree.io, get your endpoint, and replace this button with a form tag. Takes 5 minutes.')">
+      <button type="submit" class="btn btn-primary" style="align-self:flex-start; cursor:pointer;">
         Send Message →
       </button>
-      <p class="contact-note">// Form powered by Formspree (free) — enable in 5 min</p>
-    </div>
+      <p class="contact-note">// Messages go straight to your inbox</p>
+    </form>
   </div>
 </section>
 
