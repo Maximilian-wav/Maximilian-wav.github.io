@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Klaus Builds — Max Albekier</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #0a0a0a;
+      --off-black: #111111;
+      --panel: #161616;
+      --border: #252525;
+      --muted: #3a3a3a;
+      --text-dim: #888;
+      --text: #d4d0c8;
+      --text-bright: #f0ece0;
+      --accent: #e8c547;
+      --accent-dim: rgba(232, 197, 71, 0.12);
+      --accent-mid: rgba(232, 197, 71, 0.35);
+      --green: #4caf7d;
+      --radius: 3px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.025;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      height: 64px;
+      background: rgba(10,10,10,0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text-bright);
+      text-decoration: none;
+      letter-spacing: -0.01em;
+    }
+
+    .nav-logo span { color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--accent); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 0 48px;
+      padding-top: 64px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 48px 48px;
+      opacity: 0.4;
+      mask-image: radial-gradient(ellipse 80% 80% at 80% 50%, black 10%, transparent 70%);
+    }
+
+    .hero-accent-circle {
+      position: absolute;
+      right: -80px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 520px;
+      height: 520px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(232,197,71,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-left {
+      position: relative;
+      z-index: 2;
+      max-width: 580px;
+    }
+
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.8rem, 5vw, 4.2rem);
+      line-height: 1.0;
+      color: var(--text-bright);
+      letter-spacing: -0.03em;
+      margin-bottom: 24px;
+    }
+
+    h1 em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      color: var(--text-dim);
+      line-height: 1.7;
+      margin-bottom: 36px;
+      max-width: 460px;
+    }
+
+    .hero-sub strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: var(--radius);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--black);
+      font-weight: 400;
+    }
+
+    .btn-primary:hover {
+      background: #f0ce55;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(232,197,71,0.25);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--accent-mid);
+      color: var(--accent);
+    }
+
+    .hero-right {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .hero-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 28px;
+      width: 320px;
+    }
+
+    .hero-card-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stat-row:last-child { border-bottom: none; }
+
+    .stat-label {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+    }
+
+    .stat-val {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.82rem;
+      color: var(--accent);
+    }
+
+    .availability-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      background: var(--green);
+      border-radius: 50%;
+      margin-right: 6px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* ── SECTION WRAPPER ── */
+    section {
+      padding: 96px 48px;
+      max-width: 1160px;
+      margin: 0 auto;
+    }
+
+    .section-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-eyebrow::before {
+      content: '';
+      display: block;
+      width: 20px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    h2 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      color: var(--text-bright);
+      letter-spacing: -0.025em;
+      margin-bottom: 48px;
+      line-height: 1.1;
+    }
+
+    .divider {
+      width: calc(100% - 96px);
+      height: 1px;
+      background: linear-gradient(90deg, var(--accent-mid), transparent);
+      margin: 0 48px;
+    }
+
+    /* ── ABOUT ── */
+    #about .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: start;
+    }
+
+    .about-body {
+      font-size: 1rem;
+      color: var(--text-dim);
+      line-height: 1.8;
+    }
+
+    .about-body p { margin-bottom: 16px; }
+
+    .about-body strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.06em;
+      padding: 5px 12px;
+      border-radius: 2px;
+      background: var(--accent-dim);
+      color: var(--accent);
+      border: 1px solid var(--accent-mid);
+      text-transform: uppercase;
+    }
+
+    .about-right h3 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text-bright);
+      margin-bottom: 20px;
+    }
+
+    /* ── PROJECTS ── */
+    #projects .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    .project-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 28px;
+      transition: border-color 0.2s, transform 0.2s;
+      position: relative;
+      overflow: hidden;
+      text-decoration: none;
+      display: block;
+    }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .project-card:hover {
+      border-color: var(--muted);
+      transform: translateY(-3px);
+    }
+
+    .project-card:hover::before { opacity: 1; }
+
+    .project-type {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .project-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: var(--text-bright);
+      margin-bottom: 10px;
+    }
+
+    .project-desc {
+      font-size: 0.88rem;
+      color: var(--text-dim);
+      line-height: 1.65;
+      margin-bottom: 20px;
+    }
+
+    .project-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .project-link {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .project-stack {
+      display: flex;
+      gap: 6px;
+    }
+
+    .stack-pill {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      padding: 3px 8px;
+      border-radius: 2px;
+      background: var(--muted);
+      color: var(--text-dim);
+    }
+
+    /* ── EXPERIENCE ── */
+    #experience .exp-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .exp-item {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 32px;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--border);
+      align-items: start;
+    }
+
+    .exp-item:last-child { border-bottom: none; }
+
+    .exp-meta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    .exp-meta .company {
+      color: var(--accent);
+      font-size: 0.78rem;
+      margin-bottom: 4px;
+    }
+
+    .exp-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--text-bright);
+      margin-bottom: 10px;
+    }
+
+    .exp-desc {
+      font-size: 0.88rem;
+      color: var(--text-dim);
+      line-height: 1.7;
+    }
+
+    .exp-desc ul { list-style: none; margin-top: 8px; }
+
+    .exp-desc ul li {
+      position: relative;
+      padding-left: 16px;
+      margin-bottom: 5px;
+    }
+
+    .exp-desc ul li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-size: 0.8rem;
+    }
+
+    /* ── WRITING ── */
+    #writing .writing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .writing-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 24px;
+      text-decoration: none;
+      display: block;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .writing-card:hover {
+      border-color: var(--muted);
+      transform: translateY(-2px);
+    }
+
+    .writing-date {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+      margin-bottom: 10px;
+    }
+
+    .writing-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text-bright);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .writing-excerpt {
+      font-size: 0.84rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    .writing-source {
+      margin-top: 16px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--accent);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .writing-cta {
+      margin-top: 40px;
+      display: flex;
+      gap: 14px;
+    }
+
+    /* ── LINKS HUB ── */
+    #links {
+      background: var(--off-black);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    #links section {
+      padding: 80px 48px;
+    }
+
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .link-tile {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 20px 22px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: all 0.2s;
+    }
+
+    .link-tile:hover {
+      border-color: var(--accent-mid);
+      background: var(--accent-dim);
+      transform: translateY(-2px);
+    }
+
+    .link-icon { font-size: 1.4rem; flex-shrink: 0; }
+
+    .link-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--text-bright);
+      margin-bottom: 2px;
+    }
+
+    .link-handle {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-dim);
+    }
+
+    /* ── CONTACT ── */
+    #contact .contact-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: start;
+    }
+
+    .contact-left p {
+      font-size: 1rem;
+      color: var(--text-dim);
+      line-height: 1.75;
+      margin-bottom: 28px;
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-field label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .form-field input,
+    .form-field textarea {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      padding: 12px 14px;
+      outline: none;
+      transition: border-color 0.2s;
+      resize: vertical;
+    }
+
+    .form-field input:focus,
+    .form-field textarea:focus { border-color: var(--accent-mid); }
+
+    .form-field textarea { min-height: 120px; }
+
+    .contact-note {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      margin-top: 6px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 0.9rem;
+      color: var(--text-dim);
+    }
+
+    .footer-logo span { color: var(--accent); }
+
+    .footer-copy {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    /* ── ANIMATIONS ── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 0 24px; }
+      nav .nav-links { display: none; }
+
+      #hero {
+        grid-template-columns: 1fr;
+        padding: 24px;
+        padding-top: 96px;
+        min-height: auto;
+        padding-bottom: 64px;
+        gap: 48px;
+      }
+
+      .hero-right { justify-content: flex-start; }
+      .hero-card { width: 100%; }
+
+      section { padding: 64px 24px; }
+      .divider { margin: 0 24px; width: calc(100% - 48px); }
+
+      #about .about-grid { grid-template-columns: 1fr; gap: 40px; }
+      #contact .contact-inner { grid-template-columns: 1fr; gap: 40px; }
+      .exp-item { grid-template-columns: 1fr; gap: 8px; }
+
+      footer { padding: 24px; flex-direction: column; gap: 12px; text-align: center; }
+      #links section { padding: 64px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#hero">Klaus<span>.</span>Builds</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#writing">Writing</a></li>
+    <li><a href="#links">Links</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-accent-circle"></div>
+
+  <div class="hero-left fade-up">
+    <div class="hero-eyebrow">Product × AI Tooling</div>
+    <h1>Max Albekier<br /><em>Klaus Builds</em></h1>
+    <p class="hero-sub">
+      Senior Product Owner bridging <strong>enterprise platforms</strong> and <strong>emerging AI tooling</strong>.
+      8+ years shipping high-scale products at BofA, EchoStar, and beyond —
+      now building at the intersection of product thinking and intelligent systems.
+    </p>
+    <div class="btn-row">
+      <a href="#projects" class="btn btn-primary">View Projects ↗</a>
+      <a href="#contact" class="btn btn-ghost">Let's Connect</a>
+    </div>
+  </div>
+
+  <div class="hero-right fade-up" style="transition-delay: 0.15s;">
+    <div class="hero-card">
+      <div class="hero-card-label">// Current Status</div>
+      <div class="stat-row">
+        <span class="stat-label">Availability</span>
+        <span class="stat-val"><span class="availability-dot"></span>Open to Roles</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Location</span>
+        <span class="stat-val">Denver, CO</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Focus</span>
+        <span class="stat-val">Sr. PM / TPM / AI</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Experience</span>
+        <span class="stat-val">8+ years</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Freelance</span>
+        <span class="stat-val">Klaus Builds</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-eyebrow">About</div>
+  <h2>Product thinker.<br />Systems builder.</h2>
+
+  <div class="about-grid fade-up">
+    <div class="about-body">
+      <p>
+        I'm Max — a Senior Product Owner with a track record of owning complex,
+        high-scale enterprise platforms. At <strong>Bank of America</strong>, I led product
+        for Trident, an enterprise-grade compliance and assessment platform inside
+        Global Information Security. Before that, three years at <strong>EchoStar / DISH</strong>
+        as Technical PO for the Care Agent Application.
+      </p>
+      <p>
+        Klaus Builds is my independent initiative where I translate that same
+        product rigor into <strong>AI tooling, prompt engineering systems, and
+        workflow automation</strong>. What started in the Web3/blockchain space has
+        evolved into building practical, production-ready AI applications.
+      </p>
+      <p>
+        I believe great products come from sitting at the intersection of
+        technical depth and business clarity — and that's the lens I bring
+        to everything I ship.
+      </p>
+    </div>
+
+    <div class="about-right">
+      <h3>Core Competencies</h3>
+      <div class="tags">
+        <span class="tag">Product Strategy</span>
+        <span class="tag">Agile / SAFe</span>
+        <span class="tag">AI Tooling</span>
+        <span class="tag">Prompt Engineering</span>
+        <span class="tag">Enterprise Compliance</span>
+        <span class="tag">Roadmapping</span>
+        <span class="tag">Stakeholder Mgmt</span>
+        <span class="tag">API Integrations</span>
+        <span class="tag">GitHub Copilot</span>
+        <span class="tag">Claude / ChatGPT</span>
+        <span class="tag">Data Analytics</span>
+        <span class="tag">Security Platforms</span>
+        <span class="tag">Fintech</span>
+        <span class="tag">Telecom</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-eyebrow">Projects</div>
+  <h2>Things I've built.</h2>
+
+  <div class="projects-grid">
+
+    <a class="project-card fade-up" href="https://github.com/Maximilian-wav" target="_blank" rel="noopener">
+      <div class="project-type">// AI Demo · GitHub</div>
+      <div class="project-title">Dynamic AI Demo</div>
+      <p class="project-desc">
+        An interactive demonstration of AI-assisted workflows and tooling —
+        built to showcase practical LLM integrations beyond the hype.
+        Explore the repo for implementation details and live examples.
+      </p>
+      <div class="project-footer">
+        <span class="project-link">View on GitHub ↗</span>
+        <div class="project-stack">
+          <span class="stack-pill">AI</span>
+          <span class="stack-pill">GitHub</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="project-card fade-up" href="https://klausbuilds.hashnode.dev" target="_blank" rel="noopener" style="transition-delay:0.05s">
+      <div class="project-type">// Writing · Hashnode</div>
+      <div class="project-title">Klaus Builds Blog</div>
+      <p class="project-desc">
+        Technical writing on AI tooling, product thinking, and building in public.
+        From deploying ERC-20 tokens at ski resorts to navigating the intersection
+        of enterprise product and intelligent systems.
+      </p>
+      <div class="project-footer">
+        <span class="project-link">Read on Hashnode ↗</span>
+        <div class="project-stack">
+          <span class="stack-pill">Writing</span>
+          <span class="stack-pill">Web3</span>
+          <span class="stack-pill">AI</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="project-card fade-up" href="https://github.com/Maximilian-wav/kb005-prompt-guide/tree/main" target="_blank" rel="noopener" style="transition-delay:0.1s">
+      <div class="project-type">// Tooling · AI</div>
+      <div class="project-title">KB-005 Prompt Guide</div>
+      <p class="project-desc">
+        A practical prompt engineering guide and framework built as a companion
+        to KB-005. Reusable templates and LLM workflow systems designed for
+        real, production-grade AI output — not just fancy autocomplete.
+      </p>
+      <div class="project-footer">
+        <span class="project-link">View on GitHub ↗</span>
+        <div class="project-stack">
+          <span class="stack-pill">Claude</span>
+          <span class="stack-pill">Prompts</span>
+          <span class="stack-pill">AI</span>
+        </div>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-eyebrow">Experience</div>
+  <h2>Where I've shipped.</h2>
+
+  <div class="exp-list">
+
+    <div class="exp-item fade-up">
+      <div class="exp-meta">
+        <div class="company">Bank of America</div>
+        2024 – 2026<br />Denver, CO<br />Contract
+      </div>
+      <div class="exp-body">
+        <div class="exp-title">Senior Product Owner — Trident (Global Information Security)</div>
+        <div class="exp-desc">
+          Led product for Trident, an enterprise compliance and assessment platform
+          within BofA's Global Information Security division.
+          <ul>
+            <li>Owned full product lifecycle for a compliance platform serving enterprise-scale audit and assessment workflows</li>
+            <li>Partnered with cross-functional security, engineering, and risk stakeholders to drive roadmap delivery</li>
+            <li>Navigated a complex regulatory and enterprise environment with strict governance requirements</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="exp-item fade-up">
+      <div class="exp-meta">
+        <div class="company">EchoStar / DISH</div>
+        2021 – 2024<br />Denver, CO
+      </div>
+      <div class="exp-body">
+        <div class="exp-title">Technical Product Owner — Care Agent Application</div>
+        <div class="exp-desc">
+          Three-year tenure as Technical PO for the Care Agent Application — a high-scale
+          platform used by DISH's frontline support organization.
+          <ul>
+            <li>Drove platform evolution through multiple sprint cycles in a SAFe Agile environment</li>
+            <li>Managed API integrations, tooling upgrades, and agent-facing UX improvements</li>
+            <li>Collaborated with engineering, QA, and business stakeholders across telecom and streaming products</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="exp-item fade-up">
+      <div class="exp-meta">
+        <div class="company">Klaus Builds</div>
+        2021 – Present<br />Independent
+      </div>
+      <div class="exp-body">
+        <div class="exp-title">Founder — AI Tooling & Product Freelance</div>
+        <div class="exp-desc">
+          Freelance initiative spanning Web3/blockchain into AI tooling and prompt
+          engineering. Building production-grade AI integrations and consulting on
+          product strategy for early-stage teams.
+          <ul>
+            <li>Designed and shipped AI-assisted workflow tools using Claude, ChatGPT, and GitHub Copilot</li>
+            <li>Built prompt engineering systems and documentation frameworks for LLM-powered applications</li>
+            <li>Advising on product roadmap, go-to-market, and AI integration strategy</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- WRITING -->
+<section id="writing">
+  <div class="section-eyebrow">Writing</div>
+  <h2>Thinking out loud.</h2>
+
+  <div class="writing-grid">
+
+    <a class="writing-card fade-up" href="https://klausbuilds.hashnode.dev/kb-005-you-re-using-ai-wrong-heres-how-to-fix-that" target="_blank" rel="noopener">
+      <div class="writing-date">Apr 2026 · Klaus Builds</div>
+      <div class="writing-title">KB-005 | You're Using AI Wrong — Here's How to Fix That</div>
+      <p class="writing-excerpt">Most people treat AI like a search engine. That's the mistake. Here's the framework for getting real, production-grade output from tools like Claude — and a prompt guide repo to go with it.</p>
+      <div class="writing-source">Read on Hashnode ↗</div>
+    </a>
+
+    <a class="writing-card fade-up" href="https://klausbuilds.hashnode.dev/kb-004-vibe-code-portfolio-site-30-minutes-free" target="_blank" rel="noopener" style="transition-delay:0.05s">
+      <div class="writing-date">Mar 26, 2026 · Klaus Builds</div>
+      <div class="writing-title">KB-004 | Vibe Code & Launch a Portfolio Site in 30 Minutes — Zero Cost, Real Contact Form</div>
+      <p class="writing-excerpt">You don't need to be a developer. You don't need a budget. Using Claude, GitHub Pages, and Formspree you can have a custom portfolio site live in under 30 minutes for free.</p>
+      <div class="writing-source">Read on Hashnode ↗</div>
+    </a>
+
+    <a class="writing-card fade-up" href="https://klausbuilds.hashnode.dev/kb-003-klaus-builds-returns-a-crypto-odyssey-adventures-in-code-and-the-great-outdoors" target="_blank" rel="noopener" style="transition-delay:0.1s">
+      <div class="writing-date">Dec 13, 2023 · Klaus Builds</div>
+      <div class="writing-title">KB-003 | Klaus Builds Returns: A Crypto Odyssey – Adventures in Code and the Great Outdoors</div>
+      <p class="writing-excerpt">Two years on the dot since the last coding escapade. A return to building in public, covering where the journey went and what's next at the intersection of code and the outdoors.</p>
+      <div class="writing-source">Read on Hashnode ↗</div>
+    </a>
+
+  </div>
+
+  <div class="writing-cta">
+    <a href="https://klausbuilds.hashnode.dev" class="btn btn-ghost" target="_blank" rel="noopener">All Posts on Hashnode ↗</a>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- LINKS HUB -->
+<div id="links">
+  <section>
+    <div class="section-eyebrow">Links</div>
+    <h2>Find me everywhere.</h2>
+
+    <div class="links-grid fade-up">
+
+      <a class="link-tile" href="https://github.com/Maximilian-wav" target="_blank" rel="noopener">
+        <div class="link-icon">⌥</div>
+        <div class="link-info">
+          <div class="link-name">GitHub</div>
+          <div class="link-handle">@Maximilian-wav</div>
+        </div>
+      </a>
+
+      <a class="link-tile" href="https://klausbuilds.hashnode.dev" target="_blank" rel="noopener">
+        <div class="link-icon">✍</div>
+        <div class="link-info">
+          <div class="link-name">Hashnode Blog</div>
+          <div class="link-handle">klausbuilds.hashnode.dev</div>
+        </div>
+      </a>
+
+      <a class="link-tile" href="https://www.linkedin.com/in/maximilian-albekier/" target="_blank" rel="noopener">
+        <div class="link-icon">◈</div>
+        <div class="link-info">
+          <div class="link-name">LinkedIn</div>
+          <div class="link-handle">maximilian-albekier</div>
+        </div>
+      </a>
+
+      <a class="link-tile" href="mailto:Maximilian_albekier@icloud.com">
+        <div class="link-icon">✉</div>
+        <div class="link-info">
+          <div class="link-name">Email</div>
+          <div class="link-handle">Maximilian_albekier@icloud.com</div>
+        </div>
+      </a>
+
+      <a class="link-tile" href="https://hashnode.com/@KlausCoin" target="_blank" rel="noopener">
+        <div class="link-icon">◉</div>
+        <div class="link-info">
+          <div class="link-name">Hashnode Profile</div>
+          <div class="link-handle">@KlausCoin</div>
+        </div>
+      </a>
+
+      <a class="link-tile" href="https://github.com/Maximilian-wav" target="_blank" rel="noopener">
+        <div class="link-icon">▣</div>
+        <div class="link-info">
+          <div class="link-name">AI Demo Repo</div>
+          <div class="link-handle">GitHub · Maximilian-wav</div>
+        </div>
+      </a>
+
+    </div>
+  </section>
+</div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-eyebrow">Contact</div>
+  <h2>Let's build something.</h2>
+
+  <div class="contact-inner">
+    <div class="contact-left fade-up">
+      <p>
+        Whether you're looking for a Senior PM to lead a complex platform,
+        want to explore AI tooling for your team, or just want to connect —
+        I'm easy to reach and always open to interesting conversations.
+      </p>
+      <p>
+        Based in Denver, CO. Open to remote roles and selective on-site
+        opportunities. Available now.
+      </p>
+      <div class="btn-row">
+        <a href="mailto:Maximilian_albekier@icloud.com" class="btn btn-primary">Email Directly ↗</a>
+        <a href="https://www.linkedin.com/in/maximilian-albekier/" class="btn btn-ghost" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+
+    <form class="contact-form fade-up" style="transition-delay:0.1s" action="https://formspree.io/f/xnjondle" method="POST">
+      <div class="form-field">
+        <label>Name</label>
+        <input type="text" name="name" placeholder="Your name" required />
+      </div>
+      <div class="form-field">
+        <label>Email</label>
+        <input type="email" name="email" placeholder="your@email.com" required />
+      </div>
+      <div class="form-field">
+        <label>Message</label>
+        <textarea name="message" placeholder="What's on your mind?" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary" style="align-self:flex-start; cursor:pointer;">
+        Send Message →
+      </button>
+      <p class="contact-note">// Messages go straight to your inbox</p>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Klaus<span>.</span>Builds</div>
+  <div class="footer-copy">© 2026 Max Albekier — Built with intent.</div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  window.addEventListener('load', () => {
+    document.querySelectorAll('#hero .fade-up').forEach(el => {
+      setTimeout(() => el.classList.add('visible'), 100);
+    });
+  });
+</script>
+
+</body>
+</html>
